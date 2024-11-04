@@ -1,5 +1,11 @@
 package com.market.research.ticket.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +15,18 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "company_info")
 public class CompanyInfo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long companyInfoId;
     private String ticketCode;
     private String ticketName;
-    private String totalMarketValue;
-    private String circulationValue;
+    private Double totalMarketValue;
+    private Double circulationValue;
     private String status;
     private String listedDate;
     private String province;
@@ -23,11 +34,11 @@ public class CompanyInfo {
     private String business;
     private String prodName;
     private String prodType;
-    private String funds;
-    private String tradingFinancialAssets;
-    private String assetLiabilityRatio;
-    private String operatingIncome;
-    private String netProfit;
+    private Double funds;
+    private Double tradingFinancialAssets;
+    private Double assetLiabilityRatio;
+    private Double operatingIncome;
+    private Double netProfit;
     private String compType;
     private String address;
     private String office;

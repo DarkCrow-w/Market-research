@@ -21,6 +21,7 @@ public interface ProjectProcessRepository extends JpaRepository<ProjectProcess, 
     void deleteByProjectName(String projectName);
 
     @Transactional
+    @Query("UPDATE ProjectProcess p SET p = :projectProcess WHERE p.projectName = :projectName")
     ProjectProcess updateByProjectName(String projectName, ProjectProcess projectProcess);
 
     boolean existsByProjectName(String projectName);

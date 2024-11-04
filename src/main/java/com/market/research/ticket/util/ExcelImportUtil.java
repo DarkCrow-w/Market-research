@@ -28,8 +28,8 @@ public class ExcelImportUtil {
     private CompanyInfoRepository companyInfoRepository;
 
     public void importExcelData(String industrialPartyFilePath, String projectProcessFilePath, String companyInfoFilePath) throws IOException {
-        importIndustrialParties(industrialPartyFilePath);
-        importProjectProcesses(projectProcessFilePath);
+//        importIndustrialParties(industrialPartyFilePath);
+//        importProjectProcesses(projectProcessFilePath);
         importCompanyInfo(companyInfoFilePath);
     }
 
@@ -58,20 +58,21 @@ public class ExcelImportUtil {
     private void importProjectProcesses(String filePath) throws IOException {
         try (FileInputStream fis = new FileInputStream(filePath);
              Workbook workbook = WorkbookFactory.create(fis)) {
-            Sheet sheet = workbook.getSheetAt(1);
+            Sheet sheet = workbook.getSheetAt(0);
             List<ProjectProcess> processes = new ArrayList<>();
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // 跳过表头
                 ProjectProcess process = new ProjectProcess();
-                process.setFirstLevel(getCellValueAsString(row.getCell(0)));
-                process.setSecLevel(getCellValueAsString(row.getCell(1)));
-                process.setBusiness(getCellValueAsString(row.getCell(2)));
-                process.setStartTime(getCellValueAsString(row.getCell(3)));
-                process.setProgress(getCellValueAsString(row.getCell(4)));
-                process.setFinancingShare(getCellValueAsString(row.getCell(5)));
-                process.setFinancier(getCellValueAsString(row.getCell(6)));
-                process.setBusinessUnit(getCellValueAsString(row.getCell(7)));
-                process.setLp(getCellValueAsString(row.getCell(8)));
+                process.setProjectName(getCellValueAsString(row.getCell(0)));
+                process.setFirstLevel(getCellValueAsString(row.getCell(1)));
+                process.setSecLevel(getCellValueAsString(row.getCell(2)));
+                process.setBusiness(getCellValueAsString(row.getCell(3)));
+                process.setStartTime(getCellValueAsString(row.getCell(4)));
+                process.setProgress(getCellValueAsString(row.getCell(5)));
+                process.setFinancingShare(getCellValueAsString(row.getCell(6)));
+                process.setFinancier(getCellValueAsString(row.getCell(7)));
+                process.setBusinessUnit(getCellValueAsString(row.getCell(8)));
+                process.setLp(getCellValueAsString(row.getCell(9)));
                 processes.add(process);
             }
             projectProcessRepository.saveAll(processes);
@@ -81,15 +82,15 @@ public class ExcelImportUtil {
     private void importCompanyInfo(String filePath) throws IOException {
         try (FileInputStream fis = new FileInputStream(filePath);
              Workbook workbook = WorkbookFactory.create(fis)) {
-            Sheet sheet = workbook.getSheetAt(2);
+            Sheet sheet = workbook.getSheetAt(0);
             List<CompanyInfo> companies = new ArrayList<>();
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // 跳过表头
                 CompanyInfo company = new CompanyInfo();
                 company.setTicketCode(getCellValueAsString(row.getCell(0)));
                 company.setTicketName(getCellValueAsString(row.getCell(1)));
-                company.setTotalMarketValue(getCellValueAsString(row.getCell(2)));
-                company.setCirculationValue(getCellValueAsString(row.getCell(3)));
+                company.setTotalMarketValue(getCellValueAsDouble(row.getCell(2)));
+                company.setCirculationValue(getCellValueAsDouble(row.getCell(3)));
                 company.setStatus(getCellValueAsString(row.getCell(4)));
                 company.setListedDate(getCellValueAsString(row.getCell(5)));
                 company.setProvince(getCellValueAsString(row.getCell(6)));
@@ -97,11 +98,11 @@ public class ExcelImportUtil {
                 company.setBusiness(getCellValueAsString(row.getCell(8)));
                 company.setProdName(getCellValueAsString(row.getCell(9)));
                 company.setProdType(getCellValueAsString(row.getCell(10)));
-                company.setFunds(getCellValueAsString(row.getCell(11)));
-                company.setTradingFinancialAssets(getCellValueAsString(row.getCell(12)));
-                company.setAssetLiabilityRatio(getCellValueAsString(row.getCell(13)));
-                company.setOperatingIncome(getCellValueAsString(row.getCell(14)));
-                company.setNetProfit(getCellValueAsString(row.getCell(15)));
+                company.setFunds(getCellValueAsDouble(row.getCell(11)));
+                company.setTradingFinancialAssets(getCellValueAsDouble(row.getCell(12)));
+                company.setAssetLiabilityRatio(getCellValueAsDouble(row.getCell(13)));
+                company.setOperatingIncome(getCellValueAsDouble(row.getCell(14)));
+                company.setNetProfit(getCellValueAsDouble(row.getCell(15)));
                 company.setCompType(getCellValueAsString(row.getCell(16)));
                 company.setAddress(getCellValueAsString(row.getCell(17)));
                 company.setOffice(getCellValueAsString(row.getCell(18)));
@@ -128,6 +129,24 @@ public class ExcelImportUtil {
                 return String.valueOf(cell.getBooleanCellValue());
             default:
                 return "";
+        }
+    }
+
+    private Double getCellValueAsDouble(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        switch (cell.getCellType()) {
+            case NUMERIC:
+                return cell.getNumericCellValue();
+            case STRING:
+                try {
+                    return Double.parseDouble(cell.getStringCellValue());
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            default:
+                return null;
         }
     }
 }

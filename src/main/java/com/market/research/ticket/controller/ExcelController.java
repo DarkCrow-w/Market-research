@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/import")
+@RequestMapping("/api")
 public class ExcelController {
 
     @Autowired
     private MatchingService matchingService;
-    
+
     @Autowired
     private ExcelImportService excelImportService;
 
-    @PostMapping("/excel")
+    @PostMapping("/import")
     public ResponseEntity<String> importExcelFiles() {
         try {
             excelImportService.importAllExcelFiles();

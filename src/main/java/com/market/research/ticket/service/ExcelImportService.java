@@ -19,7 +19,7 @@ public class ExcelImportService {
     private ExcelImportUtil excelImportUtil;
 
     public void importAllExcelFiles() throws IOException {
-        Path resourcePath = Paths.get("src", "main", "resources", "excel");
+        Path resourcePath = Paths.get("src", "main", "resources", "testfile");
 
         String industrialPartyFilePath = resourcePath.resolve("industrial_party.xlsx").toString();
         String projectProcessFilePath = resourcePath.resolve("project_process.xlsx").toString();

@@ -11,7 +11,9 @@ import com.market.research.ticket.service.CompanyInfoService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Autowired
